@@ -31,10 +31,10 @@ jobs:
         run: |
           pip install dist/*.whl
 
-          unitts openai -o openai.mp3 "Hello world"
-          unitts azure -o azure.mp3 "Hello world"
-          unitts edge -o edge.mp3 "Hello world"
-          unitts volc -o volc.mp3 "Hello world"
+          tetos openai -o openai.mp3 "Hello world"
+          tetos azure -o azure.mp3 "Hello world"
+          tetos edge -o edge.mp3 "Hello world"
+          tetos volc -o volc.mp3 "Hello world"
         env:
           OPENAI_API_BASE: ${{ secrets.OPENAI_API_BASE }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}

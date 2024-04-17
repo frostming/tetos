@@ -9,7 +9,7 @@ from .volc import VolcSpeaker
 
 
 def setup_logger(debug: bool = False):
-    logger = logging.getLogger("unitts")
+    logger = logging.getLogger("tetos")
     handler = logging.StreamHandler()
     handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
     logger.addHandler(handler)

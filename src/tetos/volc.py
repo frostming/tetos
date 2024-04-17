@@ -14,9 +14,8 @@ from click.core import Command as Command
 from httpx import AsyncClient, Auth, Request
 from httpx._models import Response
 
-from unitts.consts import VOLC_SUPPORTED_VOICES
-
 from .base import Speaker, SynthesizeError, common_options
+from .consts import VOLC_SUPPORTED_VOICES
 
 logger = logging.getLogger(__name__)
 
@@ -99,7 +98,7 @@ class VolcSpeaker(Speaker):
     AUTH_VERSION = "volc-auth-v1"
     API_HOST = "open.volcengineapi.com"
     VERSION = "2021-07-27"
-    TOKEN_FILE = Path.home() / ".unitts" / "volc_token.json"
+    TOKEN_FILE = Path.home() / ".tetos" / "volc_token.json"
     SAMI_API_URL = "https://sami.bytedance.com/api/v1/invoke"
 
     def __init__(

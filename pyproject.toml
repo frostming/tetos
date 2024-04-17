@@ -1,6 +1,6 @@
 [project]
-name = "unitts"
-description = "Python Text-to-Speech framework"
+name = "tetos"
+description = "Unified interface for multiple Text-to-Speech (TTS) providers"
 authors = [
     {name = "Frost Ming", email = "me@frostming.com"},
 ]
@@ -17,8 +17,24 @@ readme = "README.md"
 license = {text = "Apache-2.0"}
 dynamic = ["version"]
 
+keywords = ["tts", "text-to-speech", "speech", "audio", "ai", "nlp"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+[project.urls]
+Repository = "https://github.com/frostming/tetos"
+
 [project.scripts]
-unitts = "unitts.__main__:tts"
+tetos = "tetos.__main__:tts"
 
 [build-system]
 requires = ["pdm-backend"]

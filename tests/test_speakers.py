@@ -6,7 +6,7 @@ import pytest
 
 @pytest.mark.asyncio
 async def test_openai_speaker(tmp_path: Path):
-    from unitts.openai import OpenAISpeaker
+    from tetos.openai import OpenAISpeaker
 
     speaker = OpenAISpeaker(
         api_base=os.getenv("OPENAI_API_BASE"),
@@ -19,7 +19,7 @@ async def test_openai_speaker(tmp_path: Path):
 
 @pytest.mark.asyncio
 async def test_edge_speaker(tmp_path: Path):
-    from unitts.edge import EdgeSpeaker
+    from tetos.edge import EdgeSpeaker
 
     speaker = EdgeSpeaker()
     duration = await speaker.synthesize("Hello, world!", tmp_path / "hello.mp3")
@@ -29,7 +29,7 @@ async def test_edge_speaker(tmp_path: Path):
 
 @pytest.mark.asyncio
 async def test_azure_speaker(tmp_path: Path):
-    from unitts.azure import AzureSpeaker
+    from tetos.azure import AzureSpeaker
 
     speaker = AzureSpeaker(
         speech_key=os.getenv("AZURE_SPEECH_KEY"),
@@ -42,7 +42,7 @@ async def test_azure_speaker(tmp_path: Path):
 
 @pytest.mark.asyncio
 async def test_volc_speaker(tmp_path: Path):
-    from unitts.volc import VolcSpeaker
+    from tetos.volc import VolcSpeaker
 
     speaker = VolcSpeaker(
         access_key=os.getenv("VOLC_ACCESS_KEY"),

@@ -1,4 +1,4 @@
-# unitts
+# TeToS
 
 A unified interface for multiple Text-to-Speech (TTS) providers.
 
@@ -33,23 +33,23 @@ A unified interface for multiple Text-to-Speech (TTS) providers.
 Requires Python 3.8 or higher.
 
 ```bash
-pip install unitts
+pip install tetos
 ```
 
 ## CLI Usage
 
 ```
-unitts PROVIDER [PROVIDER_OPTIONS] TEXT [--output FILE]
+tetos PROVIDER [PROVIDER_OPTIONS] TEXT [--output FILE]
 ```
 
-Please run `unitts --help` for available providers and options.
+Please run `tetos --help` for available providers and options.
 
 ## API Usage
 
 Use Azure TTS as an example:
 
 ```python
-from unitts.azure import AzureSpeaker
+from tetos.azure import AzureSpeaker
 import asyncio
 
 async def main():
