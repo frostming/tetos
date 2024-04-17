@@ -1,0 +1,61 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  release-pypi:
+    name: release-pypi
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Build artifacts
+        run: |
+          pipx run build
+
+      - name: Test Build
+        run: |
+          pip install dist/*.whl
+
+          unitts openai -o openai.mp3 "Hello world"
+          unitts azure -o azure.mp3 "Hello world"
+          unitts edge -o edge.mp3 "Hello world"
+          unitts volc -o volc.mp3 "Hello world"
+        env:
+          OPENAI_API_BASE: ${{ secrets.OPENAI_API_BASE }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          AZURE_SPEECH_KEY: ${{ secrets.AZURE_SPEECH_KEY }}
+          AZURE_SPEECH_REGION: ${{ secrets.AZURE_SPEECH_REGION }}
+          VOLC_ACCESS_KEY: ${{ secrets.VOLC_ACCESS_KEY }}
+          VOLC_SECRET_KEY: ${{ secrets.VOLC_SECRET_KEY }}
+          VOLC_APP_KEY: ${{ secrets.VOLC_APP_KEY }}
+
+      - name: Upload audio files
+        uses: actions/upload-artifact@v2
+        with:
+          name: audio
+          path: ./*.mp3
+
+      - run: npx changelogithub
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Upload to Pypi
+        run: |
+          pip install twine
+          twine upload --username __token__ --password ${{ secrets.PYPI_TOKEN }} dist/*
