@@ -49,10 +49,13 @@ Please run `tetos --help` for available providers and options.
 Use Azure TTS as an example:
 
 ```python
+import anyio
+
+from pathlib import Path
 from tetos.azure import AzureSpeaker
 
 speaker = AzureSpeaker(speech_key='...', speech_region='...')
-speaker.say('Hello, world!', 'output.mp3')
+anyio.run(speaker.synthesize, 'Hello, world!', Path('output.mp3'))
 ```
 
 The initialization parameters may be different for other providers.
