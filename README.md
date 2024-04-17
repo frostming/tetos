@@ -51,11 +51,15 @@ Use Azure TTS as an example:
 ```python
 from tetos.azure import AzureSpeaker
 
-speaker = AzureSpeaker(speech_key='...', service_region='...')
+speaker = AzureSpeaker(speech_key='...', speech_region='...')
 speaker.say('Hello, world!', 'output.mp3')
 ```
 
 The initialization parameters may be different for other providers.
+
+## Behind a proxy
+
+TeTos respects the proxy environment variables `HTTP_PROXY`, `HTTPS_PROXY`, `ALL_PROXY` and `NO_PROXY`.
 
 ## License
 
