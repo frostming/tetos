@@ -19,6 +19,13 @@ A unified interface for multiple Text-to-Speech (TTS) providers.
   - `speech_key`: Azure Speech service key
   - `service_region`: Azure Speech service region
 
+- [Google TTS](https://cloud.google.com/text-to-speech?hl=zh-CN)
+
+  Requirements:
+
+  - [Enable the Text-to-Speech API in the Google Cloud Console](https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=586547753837)
+  - Environment variables `GOOGLE_APPLICATION_CREDENTIALS` pointing to the service account key file
+
 - [Volcengine TTS(火山引擎)](https://console.volcengine.com/sami)
 
   Required parameters:
@@ -63,7 +70,7 @@ TeTos respects the proxy environment variables `HTTP_PROXY`, `HTTPS_PROXY`, `ALL
 
 ## TODO
 
-- [ ] Google TTS
+- [x] Google TTS
 - [ ] SSML support
 
 ## License

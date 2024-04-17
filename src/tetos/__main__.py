@@ -4,6 +4,7 @@ import click
 
 from .azure import AzureSpeaker
 from .edge import EdgeSpeaker
+from .google import GoogleSpeaker
 from .openai import OpenAISpeaker
 from .volc import VolcSpeaker
 
@@ -22,7 +23,7 @@ def tts(verbose: bool) -> None:
     setup_logger(verbose)
 
 
-for speaker in (OpenAISpeaker, EdgeSpeaker, AzureSpeaker, VolcSpeaker):
+for speaker in (OpenAISpeaker, EdgeSpeaker, AzureSpeaker, VolcSpeaker, GoogleSpeaker):
     tts.add_command(speaker.get_command())
 
 
