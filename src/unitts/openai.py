@@ -1,0 +1,84 @@
+from pathlib import Path
+from typing import cast
+
+import anyio
+import click
+import mutagen.mp3
+
+from .base import Speaker, common_options
+
+
+class OpenAISpeaker(Speaker):
+    def __init__(
+        self,
+        *,
+        model: str = "tts-1",
+        voice: str = "alloy",
+        speed: float | None = None,
+        api_key: str | None,
+        api_base: str | None,
+    ) -> None:
+        import openai
+
+        self.voice = voice
+        self.speed = speed
+        self.model = model
+        self.client = openai.AsyncOpenAI(api_key=api_key, base_url=api_base)
+
+    async def synthesize(self, text: str, out_file: Path) -> float:
+        extra_args = {"speed": self.speed} if self.speed is not None else {}
+        async with self.client.with_streaming_response.audio.speech.create(
+            model=self.model,
+            input=text,
+            voice=self.voice,
+            **extra_args,
+        ) as resp:
+            await resp.stream_to_file(out_file)
+
+        audio = mutagen.mp3.MP3(out_file)
+        return cast(float, audio.info.length)
+
+    @classmethod
+    def list_voices(cls) -> list[str]:
+        return ["alloy", "echo", "fable", "onyx", "nova", "shimmer"]
+
+    @classmethod
+    def get_command(cls) -> click.Command:
+        @click.command()
+        @click.option(
+            "--api-key",
+            required=True,
+            envvar="OPENAI_API_KEY",
+            help="The OpenAI API key.",
+            show_envvar=True,
+        )
+        @click.option(
+            "--api-base",
+            envvar="OPENAI_API_BASE",
+            help="The OpenAI API base URL.",
+            show_envvar=True,
+        )
+        @click.option("--model", default="tts-1", help="The model to use.")
+        @click.option("--speed", type=float, help="The speed of the speech.")
+        @click.option("--voice", default="alloy", help="The voice to use.")
+        @common_options(cls)
+        def openai(
+            api_key: str | None,
+            api_base: str | None,
+            model: str,
+            speed: float | None,
+            voice: str,
+            text: str,
+            output: str,
+        ) -> None:
+            speaker = cls(
+                model=model,
+                voice=voice,
+                speed=speed,
+                api_key=api_key,
+                api_base=api_base,
+            )
+            anyio.run(speaker.synthesize, text, Path(output))
+            click.echo(f"Speech generated successfully at {output}")
+
+        return openai
