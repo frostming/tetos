@@ -38,3 +38,17 @@ async def test_azure_speaker(tmp_path: Path):
     duration = await speaker.synthesize("Hello, world!", tmp_path / "hello.mp3")
     assert 0.5 < duration < 4
     assert (tmp_path / "hello.mp3").stat().st_size > 0
+
+
+@pytest.mark.asyncio
+async def test_volc_speaker(tmp_path: Path):
+    from unitts.volc import VolcSpeaker
+
+    speaker = VolcSpeaker(
+        access_key=os.getenv("VOLC_ACCESS_KEY"),
+        secret_key=os.getenv("VOLC_SECRET_KEY"),
+        app_key=os.getenv("VOLC_APP_KEY"),
+    )
+    duration = await speaker.synthesize("Hello, world!", tmp_path / "hello.mp3")
+    assert 0.5 < duration < 4
+    assert (tmp_path / "hello.mp3").stat().st_size > 0

@@ -10,6 +10,15 @@ from .consts import AZURE_SUPPORTED_VOICES
 
 @dataclass
 class EdgeSpeaker(Speaker):
+    """Edge TTS speaker.
+
+    Args:
+        voice (str): The voice to use.
+        rate (str): The rate of speech.
+        pitch (str): The pitch of speech.
+        volume (str): The volume of speech.
+    """
+
     voice: str = "en-US-AriaNeural"
     rate: str = "+0%"
     pitch: str = "+0Hz"

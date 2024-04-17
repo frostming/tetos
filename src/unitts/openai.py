@@ -9,6 +9,16 @@ from .base import Speaker, common_options
 
 
 class OpenAISpeaker(Speaker):
+    """OpenAI TTS speaker.
+
+    Args:
+        model (str): The model to use. Defaults to "tts-1".
+        voice (str): The voice to use. Defaults to "alloy".
+        speed (float, optional): The speed of the speech.
+        api_key (str, optional): The OpenAI API key.
+        api_base (str, optional): The OpenAI API base URL.
+    """
+
     def __init__(
         self,
         *,
@@ -33,7 +43,7 @@ class OpenAISpeaker(Speaker):
             voice=self.voice,
             **extra_args,
         ) as resp:
-            await resp.stream_to_file(out_file)
+            await resp.stream_to_file(out_file, chunk_size=8192)
 
         audio = mutagen.mp3.MP3(out_file)
         return cast(float, audio.info.length)

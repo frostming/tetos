@@ -10,6 +10,14 @@ from .consts import AZURE_SUPPORTED_VOICES
 
 
 class AzureSpeaker(Speaker):
+    """Azure TTS speaker.
+
+    Args:
+        speech_key (str): The Azure Speech key.
+        speech_region (str): The Azure Speech region.
+        voice (str): The voice to use.
+    """
+
     def __init__(
         self, speech_key: str, speech_region: str, *, voice: str = "en-US-AriaNeural"
     ) -> None:

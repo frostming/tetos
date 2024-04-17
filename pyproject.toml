@@ -1,6 +1,5 @@
 [project]
 name = "unitts"
-version = "0.1.0"
 description = "Python Text-to-Speech framework"
 authors = [
     {name = "Frost Ming", email = "me@frostming.com"},
@@ -16,6 +15,7 @@ dependencies = [
 requires-python = ">=3.8"
 readme = "README.md"
 license = {text = "Apache-2.0"}
+dynamic = ["version"]
 
 [project.scripts]
 unitts = "unitts.__main__:tts"
@@ -26,6 +26,9 @@ build-backend = "pdm.backend"
 
 [tool.pdm]
 distribution = true
+
+[tool.pdm.version]
+source = "scm"
 
 [tool.pdm.dev-dependencies]
 dev = [
