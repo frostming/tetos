@@ -56,7 +56,7 @@ class Speaker(metaclass=abc.ABCMeta):
             out_file = Path("tts-output.mp3")
 
         result = anyio.run(self.synthesize, text, out_file)
-        click.echo("Speech is generated successfully at {out_file}")
+        click.echo(f"Speech is generated successfully at {out_file}")
         return result
 
 

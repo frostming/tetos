@@ -175,8 +175,7 @@ class VolcSpeaker(Speaker):
 
         resp = await self.client.post(self.SAMI_API_URL, json=req)
         if resp.is_error:
-            logger.error("Failed to get tts: %s", resp.text)
-            raise SynthesizeError("Failed to get tts from volcengine")
+            raise self._get_error(resp)
         data = resp.json()
         if data["status_code"] == 20000000 and len(data["data"]) > 0:
             file = anyio.Path(out_file)
@@ -185,6 +184,14 @@ class VolcSpeaker(Speaker):
             payload = json.loads(data["payload"])
             return cast(float, payload["duration"])
         raise SynthesizeError("Failed to get tts from volcengine")
+
+    def _get_error(self, resp: Response) -> SynthesizeError:
+        logger.error("Failed to get tts from volcengine: %s", resp.text)
+        try:
+            data = resp.json()
+            return SynthesizeError(data["status_text"])
+        except Exception:
+            return SynthesizeError("Failed to get tts from volcengine")
 
     @classmethod
     def list_voices(cls) -> list[str]:
