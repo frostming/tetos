@@ -243,7 +243,6 @@ class VolcSpeaker(Speaker):
                 speech_rate=speech_rate,
                 pitch_rate=pitch_rate,
             )
-            anyio.run(speaker.synthesize, text, Path(output))
-            click.echo(f"Speech generated successfully at {output}")
+            speaker.say(text, Path(output))
 
         return volc

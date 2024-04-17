@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from pathlib import Path
 
-import anyio
 import click
 
 from .base import Speaker, SynthesizeError, common_options
@@ -57,7 +56,6 @@ class EdgeSpeaker(Speaker):
             voice: str, rate: str, pitch: str, volume: str, text: str, output: str
         ) -> None:
             speaker = cls(voice=voice, rate=rate, pitch=pitch, volume=volume)
-            anyio.run(speaker.synthesize, text, Path(output))
-            click.echo(f"Speech generated successfully at {output}")
+            speaker.say(text, Path(output))
 
         return edge

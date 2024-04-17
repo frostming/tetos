@@ -90,7 +90,6 @@ class AzureSpeaker(Speaker):
             speech_key: str, speech_region: str, voice: str, text: str, output: str
         ) -> None:
             speaker = cls(speech_key, speech_region, voice=voice)
-            anyio.run(speaker.synthesize, text, Path(output))
-            click.echo(f"Speech generated successfully at {output}")
+            speaker.say(text, Path(output))
 
         return azure

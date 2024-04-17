@@ -1,7 +1,6 @@
 from pathlib import Path
 from typing import cast
 
-import anyio
 import click
 import mutagen.mp3
 
@@ -88,7 +87,6 @@ class OpenAISpeaker(Speaker):
                 api_key=api_key,
                 api_base=api_base,
             )
-            anyio.run(speaker.synthesize, text, Path(output))
-            click.echo(f"Speech generated successfully at {output}")
+            speaker.say(text, Path(output))
 
         return openai

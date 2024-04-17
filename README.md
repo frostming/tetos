@@ -50,14 +50,9 @@ Use Azure TTS as an example:
 
 ```python
 from tetos.azure import AzureSpeaker
-import asyncio
 
-async def main():
-    speaker = AzureSpeaker(speech_key='...', service_region='...')
-    await speaker.synthesize('Hello, world!', 'output.mp3')
-
-if __name__ == '__main__':
-    asyncio.run(main())
+speaker = AzureSpeaker(speech_key='...', service_region='...')
+speaker.say('Hello, world!', 'output.mp3')
 ```
 
 The initialization parameters may be different for other providers.

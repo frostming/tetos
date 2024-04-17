@@ -45,6 +45,20 @@ class Speaker(metaclass=abc.ABCMeta):
         """
         raise NotImplementedError
 
+    def say(self, text: str, out_file: Path | None = None) -> float:
+        """A synchronous version of synthesize() that takes an optional
+        playback argument to play the audio.
+        """
+        import anyio
+        import click
+
+        if out_file is None:
+            out_file = Path("tts-output.mp3")
+
+        result = anyio.run(self.synthesize, text, out_file)
+        click.echo("Speech is generated successfully at {out_file}")
+        return result
+
 
 def common_options(cls: Speaker) -> Callable[[F], F]:
     def list_voices(ctx, param, value):
