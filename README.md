@@ -36,6 +36,24 @@ unitts PROVIDER [PROVIDER_OPTIONS] TEXT [--output FILE]
 
 Please run `unitts --help` for available providers and options.
 
+## API Usage
+
+Use Azure TTS as an example:
+
+```python
+from unitts.azure import AzureSpeaker
+import asyncio
+
+async def main():
+    speaker = AzureSpeaker(speech_key='...', service_region='...')
+    await speaker.synthesize('Hello, world!', 'output.mp3')
+
+if __name__ == '__main__':
+    asyncio.run(main())
+```
+
+The initialization parameters may be different for other providers.
+
 ## License
 
 [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
