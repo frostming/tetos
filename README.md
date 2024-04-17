@@ -19,6 +19,14 @@ A unified interface for multiple Text-to-Speech (TTS) providers.
   - `speech_key`: Azure Speech service key
   - `service_region`: Azure Speech service region
 
+- [Volcengine TTS(火山引擎)](https://console.volcengine.com/sami)
+
+  Required parameters:
+
+  - `access_key`: Volcengine access key ID. ([Get it here](https://console.volcengine.com/iam/keymanage/))
+  - `secret_key`: Volcengine access secret key. ([Get it here](https://console.volcengine.com/iam/keymanage/))
+  - `app_key`: Volcengine app key
+
 
 ## Installation
 
