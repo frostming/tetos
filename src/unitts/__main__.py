@@ -5,7 +5,7 @@ from .edge import EdgeSpeaker
 from .openai import OpenAISpeaker
 
 
-@click.group()
+@click.group(context_settings={"show_default": True})
 def tts() -> None:
     pass
 
