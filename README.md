@@ -61,6 +61,11 @@ The initialization parameters may be different for other providers.
 
 TeTos respects the proxy environment variables `HTTP_PROXY`, `HTTPS_PROXY`, `ALL_PROXY` and `NO_PROXY`.
 
+## TODO
+
+- [ ] Google TTS
+- [ ] SSML support
+
 ## License
 
 [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
