@@ -1,5 +1,9 @@
 """Synthesizes speech from the input string of text."""
 
+from __future__ import annotations
+
+import json
+import os
 from pathlib import Path
 from typing import cast
 
@@ -9,6 +13,7 @@ import mutagen.mp3
 from google.cloud import texttospeech
 
 from .base import Speaker, common_options
+from .consts import GOOGLE_SUPPORTED_VOICES
 
 
 class GoogleSpeaker(Speaker):
@@ -43,34 +48,54 @@ class GoogleSpeaker(Speaker):
     def __init__(
         self,
         *,
-        voice: str = "en-US-Studio-M",
+        voice: str | None = None,
         speaking_rate: float = 1.0,
         pitch: float = 0.0,
         volume_gain_db: float = 0.0,
     ) -> None:
-        self.speaking_rate = speaking_rate
-        self.pitch = pitch
         self.voice = voice
-        self.volume_gain_db = volume_gain_db
-
-    async def synthesize(self, text: str, out_file: Path) -> float:
-        input_text = texttospeech.SynthesisInput(text=text)
-        audio_config = texttospeech.AudioConfig(
+        self.audio_config = texttospeech.AudioConfig(
             audio_encoding=texttospeech.AudioEncoding.MP3,
-            speaking_rate=self.speaking_rate,
-            pitch=self.pitch,
-            volume_gain_db=self.volume_gain_db,
+            speaking_rate=speaking_rate,
+            pitch=pitch,
+            volume_gain_db=volume_gain_db,
         )
+
+    def get_voice(self, lang: str) -> str:
+        if self.voice:
+            return self.voice
+        else:
+            if lang.startswith("zh-"):
+                lang = "cmn-" + lang[3:]
+            return next(
+                (v for v in self.list_voices() if v.startswith(lang)),
+                "en-US-Studio-M",
+            )
+
+    async def synthesize(
+        self, text: str, out_file: str | Path, lang: str = "en-US"
+    ) -> float:
+        input_text = texttospeech.SynthesisInput(text=text)
         voice = texttospeech.VoiceSelectionParams(
-            language_code="-".join(self.voice.split("-")[:2]),
-            name=self.voice,
+            name=(voice := self.get_voice(lang)),
+            language_code="-".join(voice.split("-")[:2]),
         )
-        async with texttospeech.TextToSpeechAsyncClient() as client:
+        if "GOOGLE_CREDENTIALS_JSON" in os.environ:
+            from google.oauth2 import service_account
+
+            credentials = service_account.Credentials.from_service_account_info(
+                json.loads(os.environ["GOOGLE_CREDENTIALS_JSON"])
+            )
+        else:
+            credentials = None  # Use default credentials
+        async with texttospeech.TextToSpeechAsyncClient(
+            credentials=credentials
+        ) as client:
             resp = await client.synthesize_speech(
                 request={
                     "input": input_text,
                     "voice": voice,
-                    "audio_config": audio_config,
+                    "audio_config": self.audio_config,
                 }
             )
         file = anyio.Path(out_file)
@@ -82,14 +107,11 @@ class GoogleSpeaker(Speaker):
 
     @classmethod
     def list_voices(cls) -> list[str]:
-        with texttospeech.TextToSpeechClient() as client:
-            resp = client.list_voices()
-        return [v.name for v in resp.voices]
+        return GOOGLE_SUPPORTED_VOICES
 
     @classmethod
     def get_command(cls) -> click.Command:
         @click.command()
-        @click.option("--voice", default="en-US-Studio-M", help="The voice to use.")
         @click.option(
             "--speaking-rate", default=1.0, help="The speaking rate.", type=click.FLOAT
         )
@@ -99,11 +121,12 @@ class GoogleSpeaker(Speaker):
         )
         @common_options(cls)
         def google(
-            voice: str,
+            voice: str | None,
             speaking_rate: float,
             pitch: float,
             volume_gain_db: float,
             text: str,
+            lang: str,
             output: str,
         ) -> None:
             speaker = cls(
@@ -112,6 +135,6 @@ class GoogleSpeaker(Speaker):
                 pitch=pitch,
                 volume_gain_db=volume_gain_db,
             )
-            speaker.say(text, Path(output))
+            speaker.say(text, output, lang=lang)
 
         return google

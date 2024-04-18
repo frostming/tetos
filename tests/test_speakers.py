@@ -52,3 +52,13 @@ async def test_volc_speaker(tmp_path: Path):
     duration = await speaker.synthesize("Hello, world!", tmp_path / "hello.mp3")
     assert 0.5 < duration < 4
     assert (tmp_path / "hello.mp3").stat().st_size > 0
+
+
+@pytest.mark.asyncio
+async def test_google_speaker(tmp_path: Path):
+    from tetos.google import GoogleSpeaker
+
+    speaker = GoogleSpeaker()
+    duration = await speaker.synthesize("Hello, world!", tmp_path / "hello.mp3")
+    assert 0.5 < duration < 4
+    assert (tmp_path / "hello.mp3").stat().st_size > 0

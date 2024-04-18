@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pathlib import Path
 from typing import cast
 
@@ -22,19 +24,21 @@ class OpenAISpeaker(Speaker):
         self,
         *,
         model: str = "tts-1",
-        voice: str = "alloy",
+        voice: str | None = None,
         speed: float | None = None,
         api_key: str | None,
         api_base: str | None,
     ) -> None:
         import openai
 
-        self.voice = voice
+        self.voice = voice or "alloy"
         self.speed = speed
         self.model = model
         self.client = openai.AsyncOpenAI(api_key=api_key, base_url=api_base)
 
-    async def synthesize(self, text: str, out_file: Path) -> float:
+    async def synthesize(
+        self, text: str, out_file: str | Path, lang: str = "en-US"
+    ) -> float:
         extra_args = {"speed": self.speed} if self.speed is not None else {}
         async with self.client.with_streaming_response.audio.speech.create(
             model=self.model,
@@ -69,7 +73,6 @@ class OpenAISpeaker(Speaker):
         )
         @click.option("--model", default="tts-1", help="The model to use.")
         @click.option("--speed", type=float, help="The speed of the speech.")
-        @click.option("--voice", default="alloy", help="The voice to use.")
         @common_options(cls)
         def openai(
             api_key: str | None,
@@ -78,6 +81,7 @@ class OpenAISpeaker(Speaker):
             speed: float | None,
             voice: str,
             text: str,
+            lang: str,
             output: str,
         ) -> None:
             speaker = cls(
@@ -87,6 +91,6 @@ class OpenAISpeaker(Speaker):
                 api_key=api_key,
                 api_base=api_base,
             )
-            speaker.say(text, Path(output))
+            speaker.say(text, output, lang=lang)
 
         return openai

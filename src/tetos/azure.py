@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import os
 from pathlib import Path
 
@@ -15,19 +17,15 @@ class AzureSpeaker(Speaker):
     Args:
         speech_key (str): The Azure Speech key.
         speech_region (str): The Azure Speech region.
-        voice (str): The voice to use.
+        voice (str, optional): The voice to use.
     """
 
     def __init__(
-        self, speech_key: str, speech_region: str, *, voice: str = "en-US-AriaNeural"
+        self, speech_key: str, speech_region: str, *, voice: str | None = None
     ) -> None:
-        self.speech_config = speechsdk.SpeechConfig(
-            subscription=speech_key, region=speech_region
-        )
-        self.speech_config.speech_synthesis_voice_name = voice
-        self.speech_config.set_speech_synthesis_output_format(
-            speechsdk.SpeechSynthesisOutputFormat.Audio16Khz32KBitRateMonoMp3
-        )
+        self.voice = voice
+        self.speech_key = speech_key
+        self.speech_region = speech_region
         self._set_proxy()
 
     def _set_proxy(self) -> None:
@@ -47,10 +45,29 @@ class AzureSpeaker(Speaker):
             )
             break
 
-    async def synthesize(self, text: str, out_file: Path) -> float:
+    def get_speech_config(self, lang: str) -> str:
+        config = speechsdk.SpeechConfig(
+            subscription=self.speech_key, region=self.speech_region
+        )
+        config.set_speech_synthesis_output_format(
+            speechsdk.SpeechSynthesisOutputFormat.Audio16Khz32KBitRateMonoMp3
+        )
+        if self.voice:
+            voice = self.voice
+        else:
+            voice = next(
+                (v for v in self.list_voices() if v.startswith(lang)),
+                "en-US-AriaNeural",
+            )
+        config.speech_synthesis_voice_name = voice
+        return config
+
+    async def synthesize(
+        self, text: str, out_file: str | Path, lang: str = "en-US"
+    ) -> float:
         audio_config = speechsdk.audio.AudioOutputConfig(filename=str(out_file))
         speech_synthesizer = speechsdk.SpeechSynthesizer(
-            speech_config=self.speech_config, audio_config=audio_config
+            speech_config=self.get_speech_config(lang), audio_config=audio_config
         )
         result = await anyio.to_thread.run_sync(speech_synthesizer.speak_text, text)
 
@@ -84,12 +101,16 @@ class AzureSpeaker(Speaker):
             required=True,
             help="The Azure Speech region.",
         )
-        @click.option("--voice", default="en-US-AriaNeural", help="The voice to use.")
         @common_options(cls)
         def azure(
-            speech_key: str, speech_region: str, voice: str, text: str, output: str
+            speech_key: str,
+            speech_region: str,
+            voice: str | None,
+            text: str,
+            lang: str,
+            output: str,
         ) -> None:
             speaker = cls(speech_key, speech_region, voice=voice)
-            speaker.say(text, Path(output))
+            speaker.say(text, output, lang=lang)
 
         return azure

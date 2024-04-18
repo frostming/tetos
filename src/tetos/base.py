@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import abc
 from pathlib import Path
 from typing import Any, Callable, TypeVar
@@ -13,12 +15,15 @@ class SynthesizeError(RuntimeError):
 
 class Speaker(metaclass=abc.ABCMeta):
     @abc.abstractmethod
-    async def synthesize(self, text: str, out_file: Path) -> float:
+    async def synthesize(
+        self, text: str, out_file: str | Path, lang: str = "en-US"
+    ) -> float:
         """Generate speech from text and save it to a file.
 
         Args:
             text (str): The text to synthesize.
             out_file (Path): The file to save the speech to.
+            lang (str): The language code of the text. e.g. "en-US", "fr-FR".
 
         Returns:
             float: The duration of the speech in seconds.
@@ -45,9 +50,15 @@ class Speaker(metaclass=abc.ABCMeta):
         """
         raise NotImplementedError
 
-    def say(self, text: str, out_file: Path | None = None) -> float:
-        """A synchronous version of synthesize() that takes an optional
-        playback argument to play the audio.
+    def say(
+        self, text: str, out_file: str | Path | None = None, lang: str = "en-US"
+    ) -> float:
+        """A synchronous version of synthesize()
+
+        Args:
+            text (str): The text to synthesize.
+            out_file (Path): The file to save the speech to.
+            lang (str): The language code of the text. e.g. "en-US", "fr-FR".
         """
         import anyio
         import click
@@ -55,7 +66,7 @@ class Speaker(metaclass=abc.ABCMeta):
         if out_file is None:
             out_file = Path("tts-output.mp3")
 
-        result = anyio.run(self.synthesize, text, out_file)
+        result = anyio.run(self.synthesize, text, out_file, lang)
         click.echo(f"Speech is generated successfully at {out_file}")
         return result
 
@@ -75,6 +86,15 @@ def common_options(cls: Speaker) -> Callable[[F], F]:
             type=click.Path(dir_okay=False),
             default="tts-output.mp3",
             help="The output file.",
+        )(func)
+        func = click.option(
+            "--voice",
+            help="The voice to use. See supported voices with `--list-voices`",
+        )(func)
+        func = click.option(
+            "--lang",
+            default="en-US",
+            help="The language code of the text. e.g. 'en-US', 'fr-FR'.",
         )(func)
         func = click.option(
             "--list-voices",

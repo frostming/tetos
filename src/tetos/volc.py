@@ -107,7 +107,7 @@ class VolcSpeaker(Speaker):
         secret_key: str,
         app_key: str,
         *,
-        voice: str = "zh_female_qingxin",
+        voice: str | None = None,
         sample_rate: int = 24000,
         speech_rate: int = 0,
         pitch_rate: int = 0,
@@ -115,7 +115,7 @@ class VolcSpeaker(Speaker):
         self.access_key = access_key
         self.secret_key = secret_key
         self.app_key = app_key
-        self.voice = voice
+        self.voice = voice or "zh_female_qingxin"
         self.sample_rate = sample_rate
         self.speech_rate = speech_rate
         self.pitch_rate = pitch_rate
@@ -153,7 +153,9 @@ class VolcSpeaker(Speaker):
             json.dump(token, f)
         return token
 
-    async def synthesize(self, text: str, out_file: Path) -> float:
+    async def synthesize(
+        self, text: str, out_file: str | Path, lang: str = "en-US"
+    ) -> float:
         tts_payload = json.dumps(
             {
                 "text": text,

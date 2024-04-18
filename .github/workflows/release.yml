@@ -9,6 +9,8 @@ jobs:
   release-pypi:
     name: release-pypi
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - uses: actions/checkout@v4
@@ -35,6 +37,7 @@ jobs:
           tetos azure -o azure.mp3 "Hello world"
           tetos edge -o edge.mp3 "Hello world"
           tetos volc -o volc.mp3 "Hello world"
+          tetos google -o google.mp3 "Hello world"
         env:
           OPENAI_API_BASE: ${{ secrets.OPENAI_API_BASE }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -43,6 +46,7 @@ jobs:
           VOLC_ACCESS_KEY: ${{ secrets.VOLC_ACCESS_KEY }}
           VOLC_SECRET_KEY: ${{ secrets.VOLC_SECRET_KEY }}
           VOLC_APP_KEY: ${{ secrets.VOLC_APP_KEY }}
+          GOOGLE_CREDENTIALS_JSON: ${{ secrets.GOOGLE_CREDENTIALS }}
 
       - name: Upload audio files
         uses: actions/upload-artifact@v2
