@@ -34,6 +34,13 @@ A unified interface for multiple Text-to-Speech (TTS) providers.
   - `secret_key`: Volcengine access secret key. ([Get it here](https://console.volcengine.com/iam/keymanage/))
   - `app_key`: Volcengine app key
 
+- [Baidu TTS](https://ai.baidu.com/tech/speech/tts)
+
+  Required parameters:
+
+  - `app_id`: Baidu app ID, [Get it at the console](https://console.bce.baidu.com/ai/#/ai/speech/app/list)
+  - `api_key`: Baidu API
+
 
 ## Installation
 

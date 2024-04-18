@@ -241,6 +241,7 @@ class VolcSpeaker(Speaker):
             sample_rate: int,
             speech_rate: int,
             pitch_rate: int,
+            lang: str,
             text: str,
             output: str,
         ) -> None:
@@ -253,6 +254,6 @@ class VolcSpeaker(Speaker):
                 speech_rate=speech_rate,
                 pitch_rate=pitch_rate,
             )
-            speaker.say(text, Path(output))
+            speaker.say(text, output, lang=lang)
 
         return volc
