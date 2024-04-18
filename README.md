@@ -38,8 +38,10 @@ A unified interface for multiple Text-to-Speech (TTS) providers.
 
   Required parameters:
 
-  - `app_id`: Baidu app ID, [Get it at the console](https://console.bce.baidu.com/ai/#/ai/speech/app/list)
-  - `api_key`: Baidu API
+  - `api_key`: Baidu API key
+  - `secret_key`: Baidu secret key
+
+  [Get both at the console](https://console.bce.baidu.com/ai/#/ai/speech/app/list)
 
 
 ## Installation
@@ -57,6 +59,15 @@ tetos PROVIDER [PROVIDER_OPTIONS] TEXT [--output FILE]
 ```
 
 Please run `tetos --help` for available providers and options.
+
+Examples
+
+```
+tetos google "Hello, world!"
+tetos azure "Hello, world!" --output output.mp3   # save to another file
+tetos edge --lang zh-CN "你好，世界！"  # specify language
+tetos openai --voice echo "Hello, world!"  # specify voice
+```
 
 ## API Usage
 
