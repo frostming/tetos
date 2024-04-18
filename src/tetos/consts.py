@@ -843,3 +843,19 @@ GOOGLE_SUPPORTED_VOICES = [
     "yue-HK-Standard-C",
     "yue-HK-Standard-D",
 ]
+
+BAIDU_SUPPORTED_VOICES = {
+    # Basic
+    "DuXiaoYu": 1,
+    "DuXiaoMei": 0,
+    "DuXiaoYao": 3,
+    "DuYaYa": 4,
+    # High Quality
+    "DuXiaoYaoHQ": 5003,
+    "DuXiaoLu": 5118,
+    "DuBoWen": 106,
+    "DuXiaoTong": 110,
+    "DuMiDuo": 103,
+    "DuXiaoJiao": 5,
+    "DuXiaoMeng": 111,
+}

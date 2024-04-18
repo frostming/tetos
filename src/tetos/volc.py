@@ -132,6 +132,7 @@ class VolcSpeaker(Speaker):
         return self._token["token"]
 
     async def _request_token(self) -> dict[str, Any]:
+        logger.info("Requesting token")
         data = {
             "appkey": self.app_key,
             "token_version": self.AUTH_VERSION,

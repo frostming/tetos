@@ -43,7 +43,7 @@ class EdgeSpeaker(Speaker):
         async with await file.open("wb") as f:
             async for chunk in communicate.stream():
                 if chunk["type"] == "audio":
-                    f.write(chunk["data"])
+                    await f.write(chunk["data"])
                 elif chunk["type"] == "WordBoundary":
                     duration = (chunk["offset"] + chunk["duration"]) / 1e7
             if duration == 0:
