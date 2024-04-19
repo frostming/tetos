@@ -17,7 +17,7 @@ A unified interface for multiple Text-to-Speech (TTS) providers.
   Required parameters(Please refer to the documentation to get the secrets):
 
   - `speech_key`: Azure Speech service key
-  - `service_region`: Azure Speech service region
+  - `speech_region`: Azure Speech service region
 
 - [Google TTS](https://cloud.google.com/text-to-speech?hl=zh-CN)
 
