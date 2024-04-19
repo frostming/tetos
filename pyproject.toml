@@ -33,6 +33,7 @@ classifiers = [
 
 [project.urls]
 Repository = "https://github.com/frostming/tetos"
+Documentation = "https://tetos.readthedocs.io/latest/"
 
 [project.scripts]
 tetos = "tetos.__main__:tts"

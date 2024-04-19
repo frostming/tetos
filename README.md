@@ -5,6 +5,7 @@
 [![Python](https://img.shields.io/pypi/pyversions/tetos)](https://pypi.org/project/tetos/)
 [![License](https://img.shields.io/pypi/l/tetos)](https://www.apache.org/licenses/LICENSE-2.0)
 [![Downloads](https://pepy.tech/badge/tetos)](https://pepy.tech/project/tetos)
+[![Documentation Status](https://readthedocs.org/projects/tetos/badge/?version=latest)](https://tetos.readthedocs.io/latest/?badge=latest)
 
 A unified interface for multiple Text-to-Speech (TTS) providers.
 
