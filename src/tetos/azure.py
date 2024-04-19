@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+from dataclasses import dataclass
 from pathlib import Path
 
 import anyio.to_thread
@@ -11,6 +12,7 @@ from .base import Speaker, SynthesizeError, common_options
 from .consts import AZURE_SUPPORTED_VOICES
 
 
+@dataclass
 class AzureSpeaker(Speaker):
     """Azure TTS speaker.
 
@@ -20,15 +22,11 @@ class AzureSpeaker(Speaker):
         voice (str, optional): The voice to use.
     """
 
-    def __init__(
-        self, speech_key: str, speech_region: str, *, voice: str | None = None
-    ) -> None:
-        self.voice = voice
-        self.speech_key = speech_key
-        self.speech_region = speech_region
-        self._set_proxy()
+    speech_key: str
+    speech_region: str
+    voice: str | None = None
 
-    def _set_proxy(self) -> None:
+    def _set_proxy(self, speech_config: speechsdk.SpeechConfig) -> None:
         from urllib.parse import urlparse
 
         for env in ("http_proxy", "https_proxy", "all_proxy"):
@@ -37,7 +35,7 @@ class AzureSpeaker(Speaker):
             if not url:
                 continue
             parsed_url = urlparse(url)
-            self.speech_config.set_proxy(
+            speech_config.set_proxy(
                 parsed_url.hostname,
                 parsed_url.port,
                 parsed_url.username,
@@ -49,6 +47,7 @@ class AzureSpeaker(Speaker):
         config = speechsdk.SpeechConfig(
             subscription=self.speech_key, region=self.speech_region
         )
+        self._set_proxy(config)
         config.set_speech_synthesis_output_format(
             speechsdk.SpeechSynthesisOutputFormat.Audio16Khz32KBitRateMonoMp3
         )

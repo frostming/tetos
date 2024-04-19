@@ -4,6 +4,7 @@ import json
 import logging
 import platform
 import time
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, ClassVar, cast
 from urllib.parse import quote_plus
@@ -12,7 +13,6 @@ import anyio
 import click
 import httpx
 import mutagen.mp3
-from attr import dataclass, field
 
 from .base import Speaker, SynthesizeError, common_options
 from .consts import BAIDU_SUPPORTED_VOICES
@@ -45,7 +45,7 @@ class BaiduSpeaker(Speaker):
     speed: int = 5
     pitch: int = 5
     volume: int = 5
-    _token: dict[str, Any] = field(factory=dict, init=False)
+    _token: dict[str, Any] = field(default_factory=dict, init=False)
 
     TOKEN_FILE: ClassVar[Path] = Path.home() / ".tetos" / "baidu_token.json"
 
