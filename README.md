@@ -1,4 +1,10 @@
 # TeToS
+<!--index start-->
+
+[![PyPI](https://img.shields.io/pypi/v/tetos)](https://pypi.org/project/tetos/)
+[![Python](https://img.shields.io/pypi/pyversions/tetos)](https://pypi.org/project/tetos/)
+[![License](https://img.shields.io/pypi/l/tetos)](https://www.apache.org/licenses/LICENSE-2.0)
+[![Downloads](https://pepy.tech/badge/tetos)](https://pepy.tech/project/tetos)
 
 A unified interface for multiple Text-to-Speech (TTS) providers.
 
@@ -94,3 +100,5 @@ TeTos respects the proxy environment variables `HTTP_PROXY`, `HTTPS_PROXY`, `ALL
 ## License
 
 [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
+
+<!--index end-->

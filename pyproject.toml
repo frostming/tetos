@@ -52,3 +52,8 @@ dev = [
     "pytest>=8.1.1",
     "pytest-asyncio>=0.23.6",
 ]
+doc = [
+    "sphinx>=7.1.2",
+    "myst-parser>=2.0.0",
+    "shibuya>=2024.4.15",
+]
