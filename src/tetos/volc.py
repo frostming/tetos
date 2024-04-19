@@ -21,15 +21,17 @@ logger = logging.getLogger(__name__)
 
 
 class VolcSignAuth(Auth):
-    SERVICE_NAME = "sami"
-    REGION = "cn-north-1"
     ALGORITHM = "HMAC-SHA256"
 
     requires_request_body = True
 
-    def __init__(self, access_key: str, secret_key: str) -> None:
+    def __init__(
+        self, access_key: str, secret_key: str, service: str, region: str
+    ) -> None:
         self.access_key = access_key
         self.secret_key = secret_key
+        self.service = service
+        self.region = region
 
     @staticmethod
     def hmac_sha256(key: bytes, content: str) -> bytes:
@@ -55,7 +57,7 @@ class VolcSignAuth(Auth):
         )
 
         canonical_request_hash = hashlib.sha256(canonical_request.encode()).hexdigest()
-        credential_scope = f"{x_date[:8]}/{self.REGION}/{self.SERVICE_NAME}/request"
+        credential_scope = f"{x_date[:8]}/{self.region}/{self.service}/request"
         string_to_sign = "\n".join(
             [
                 self.ALGORITHM,
@@ -95,6 +97,8 @@ class VolcSpeaker(Speaker):
         pitch_rate (int, optional): The pitch rate. It should be in range [-12,12]. Defaults to 0.
     """
 
+    SERVICE_NAME = "sami"
+    REGION = "cn-north-1"
     AUTH_VERSION = "volc-auth-v1"
     API_HOST = "open.volcengineapi.com"
     VERSION = "2021-07-27"
@@ -143,7 +147,9 @@ class VolcSpeaker(Speaker):
             params={"Action": "GetToken", "Version": self.VERSION},
             json=data,
             headers={"Host": self.API_HOST},
-            auth=VolcSignAuth(self.access_key, self.secret_key),
+            auth=VolcSignAuth(
+                self.access_key, self.secret_key, self.SERVICE_NAME, self.REGION
+            ),
         )
         if resp.is_error:
             logger.error("Failed to get token: %s", resp.text)
