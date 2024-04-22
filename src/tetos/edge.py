@@ -7,7 +7,7 @@ import anyio
 import click
 
 from .base import Speaker, SynthesizeError, common_options
-from .consts import AZURE_SUPPORTED_VOICES
+from .consts import EDGE_SUPPORTED_VOICES
 
 
 @dataclass
@@ -61,7 +61,7 @@ class EdgeSpeaker(Speaker):
 
     @classmethod
     def list_voices(cls) -> list[str]:
-        return AZURE_SUPPORTED_VOICES
+        return EDGE_SUPPORTED_VOICES
 
     @classmethod
     def get_command(cls) -> click.Command:
