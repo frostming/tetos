@@ -69,7 +69,6 @@ class AzureSpeaker(Speaker):
             speech_config=self.get_speech_config(lang), audio_config=audio_config
         )
         result = await anyio.to_thread.run_sync(speech_synthesizer.speak_text, text)
-
         if result.reason == speechsdk.ResultReason.SynthesizingAudioCompleted:
             return result.audio_duration.total_seconds()
         elif result.reason == speechsdk.ResultReason.Canceled:
