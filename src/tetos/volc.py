@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import base64
 import hashlib
 import hmac
@@ -70,7 +72,10 @@ class VolcSignAuth(Auth):
         for scope in credential_scope.split("/"):
             sign_key = self.hmac_sha256(sign_key, scope)
         signature = self.hmac_sha256(sign_key, string_to_sign).hex()
-        authorization = f"{self.ALGORITHM} Credential={self.access_key}/{credential_scope}, SignedHeaders={signed_headers}, Signature={signature}"
+        authorization = (
+            f"{self.ALGORITHM} Credential={self.access_key}/{credential_scope}"
+            f", SignedHeaders={signed_headers}, Signature={signature}"
+        )
         request.headers.update(
             {
                 "Authorization": authorization,
@@ -94,7 +99,8 @@ class VolcSpeaker(Speaker):
             Defaults to 24000.
         speech_rate (int, optional): The speech rate. It should be in range [-50,100].
             100 means 2x speed and -50 means half speed. Defaults to 0.
-        pitch_rate (int, optional): The pitch rate. It should be in range [-12,12]. Defaults to 0.
+        pitch_rate (int, optional): The pitch rate. It should be in range [-12,12].
+            Defaults to 0.
     """
 
     SERVICE_NAME = "sami"

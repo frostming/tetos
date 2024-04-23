@@ -318,8 +318,9 @@ MICROSOFT_SUPPORTED_VOICES = [
     "zu-ZA-ThandoNeural",
     "zu-ZA-ThembaNeural",
 ]
-EDGE_SUPPORTED_VOICES = MICROSOFT_SUPPORTED_VOICES + ["en-IN-NeerjaExpressiveNeural"]
-AZURE_SUPPORTED_VOICES = MICROSOFT_SUPPORTED_VOICES + [
+EDGE_SUPPORTED_VOICES = [*MICROSOFT_SUPPORTED_VOICES, "en-IN-NeerjaExpressiveNeural"]
+AZURE_SUPPORTED_VOICES = [
+    *MICROSOFT_SUPPORTED_VOICES,
     "ca-ES-AlbaNeural",
     "de-DE-BerndNeural",
     "de-DE-ChristophNeural",
