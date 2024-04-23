@@ -2,13 +2,7 @@ import logging
 
 import click
 
-from .azure import AzureSpeaker
-from .baidu import BaiduSpeaker
-from .edge import EdgeSpeaker
-from .google import GoogleSpeaker
-from .minimax import MinimaxSpeaker
-from .openai import OpenAISpeaker
-from .volc import VolcSpeaker
+from . import ALL_SPEAKERS
 
 
 def setup_logger(debug: bool = False):
@@ -25,15 +19,7 @@ def tts(verbose: bool) -> None:
     setup_logger(verbose)
 
 
-for speaker in (
-    OpenAISpeaker,
-    EdgeSpeaker,
-    AzureSpeaker,
-    VolcSpeaker,
-    GoogleSpeaker,
-    BaiduSpeaker,
-    MinimaxSpeaker,
-):
+for speaker in ALL_SPEAKERS:
     tts.add_command(speaker.get_command())
 
 

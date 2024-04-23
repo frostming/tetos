@@ -1,5 +1,11 @@
 # TTS Speaker API
 
+```{eval-rst}
+.. automodule:: tetos
+
+.. autofunction:: tetos.get_speaker
+```
+
 ## Azure
 
 ```{eval-rst}
