@@ -6,6 +6,7 @@ from .azure import AzureSpeaker
 from .baidu import BaiduSpeaker
 from .edge import EdgeSpeaker
 from .google import GoogleSpeaker
+from .minimax import MinimaxSpeaker
 from .openai import OpenAISpeaker
 from .volc import VolcSpeaker
 
@@ -31,6 +32,7 @@ for speaker in (
     VolcSpeaker,
     GoogleSpeaker,
     BaiduSpeaker,
+    MinimaxSpeaker,
 ):
     tts.add_command(speaker.get_command())
 

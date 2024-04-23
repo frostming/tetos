@@ -70,7 +70,6 @@ select = [
   "E",    # pycodestyle
   "F",    # pyflakes
   "PGH",  # pygrep-hooks
-  "RUF",  # ruff
   "W",    # pycodestyle
   "YTT",  # flake8-2020
 ]

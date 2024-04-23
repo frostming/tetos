@@ -59,3 +59,16 @@
     :members:
     :inherited-members:
 ```
+
+## Minimax
+
+```{eval-rst}
+.. automodule:: tetos.minimax
+
+.. autoclass:: tetos.minimax.MinimaxSpeaker
+    :members:
+    :inherited-members:
+
+.. autoclass:: tetos.minimax.TimberWeight
+    :members:
+```

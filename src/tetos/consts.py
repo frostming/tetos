@@ -1044,3 +1044,28 @@ BAIDU_SUPPORTED_VOICES = {
     "DuXiaoJiao": 5,
     "DuXiaoMeng": 111,
 }
+
+MINIMAX_SUPPORTED_VOICES = [
+    "male-qn-qingse",
+    "male-qn-jingying",
+    "male-qn-badao",
+    "male-qn-daxuesheng",
+    "female-shaonv",
+    "female-yujie",
+    "female-chengshu",
+    "female-tianmei",
+    "presenter_male",
+    "presenter_female",
+    "audiobook_male_1",
+    "audiobook_male_2",
+    "audiobook_female_1",
+    "audiobook_female_2",
+    "male-qn-qingse-jingpin",
+    "male-qn-jingying-jingpin",
+    "male-qn-badao-jingpin",
+    "male-qn-daxuesheng-jingpin",
+    "female-shaonv-jingpin",
+    "female-yujie-jingpin",
+    "female-chengshu-jingpin",
+    "female-tianmei-jingpin",
+]

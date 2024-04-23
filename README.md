@@ -50,6 +50,15 @@ A unified interface for multiple Text-to-Speech (TTS) providers.
 
   [Get both at the console](https://console.bce.baidu.com/ai/#/ai/speech/app/list)
 
+- [Minimax TTS](https://www.minimaxi.com/document/speech-synthesis-engine?id=645e034eeb82db92fba9ac20)
+
+  Required parameters:
+
+  - `api_key`: Minimax API key
+  - `group_id`: Minimax group ID
+
+  Get both at the [Minimax console](https://www.minimaxi.com/user-center/basic-information)
+
 
 ## Installation
 

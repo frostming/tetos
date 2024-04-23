@@ -108,3 +108,7 @@ def common_options(cls: Speaker) -> Callable[[F], F]:
         return func
 
     return decorator
+
+
+def filter_none(d: dict[str, Any]) -> dict[str, Any]:
+    return {k: v for k, v in d.items() if v is not None}
