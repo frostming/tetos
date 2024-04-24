@@ -12,57 +12,19 @@ A unified interface for multiple Text-to-Speech (TTS) providers.
 
 ## Supported TTS providers
 
-- [Edge-TTS](https://github.com/rany2/edge-tts)
-- [OpenAI TTS](https://platform.openai.com/docs/guides/text-to-speech)
-
-  Required parameters:
-
-  - `api_key`: OpenAI API key
-
-- [Azure TTS](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/text-to-speech)
-
-  Required parameters(Please refer to the documentation to get the secrets):
-
-  - `speech_key`: Azure Speech service key
-  - `speech_region`: Azure Speech service region
-
-- [Google TTS](https://cloud.google.com/text-to-speech?hl=zh-CN)
-
-  Requirements:
-
-  - [Enable the Text-to-Speech API in the Google Cloud Console](https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=586547753837)
-  - Environment variables `GOOGLE_APPLICATION_CREDENTIALS` pointing to the service account key file
-
-- [Volcengine TTS(火山引擎)](https://console.volcengine.com/sami)
-
-  Required parameters:
-
-  - `access_key`: Volcengine access key ID. ([Get it here](https://console.volcengine.com/iam/keymanage/))
-  - `secret_key`: Volcengine access secret key. ([Get it here](https://console.volcengine.com/iam/keymanage/))
-  - `app_key`: Volcengine app key
-
-- [Baidu TTS](https://ai.baidu.com/tech/speech/tts)
-
-  Required parameters:
-
-  - `api_key`: Baidu API key
-  - `secret_key`: Baidu secret key
-
-  [Get both at the console](https://console.bce.baidu.com/ai/#/ai/speech/app/list)
-
-- [Minimax TTS](https://www.minimaxi.com/document/speech-synthesis-engine?id=645e034eeb82db92fba9ac20)
-
-  Required parameters:
-
-  - `api_key`: Minimax API key
-  - `group_id`: Minimax group ID
-
-  Get both at the [Minimax console](https://www.minimaxi.com/user-center/basic-information)
-
+| Provider                                                                                             | Requirements                                                                                                                                                                                                                                                      |
+| ---------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Edge-TTS](https://github.com/rany2/edge-tts)                                                        | -                                                                                                                                                                                                                                                                 |
+| [OpenAI TTS](https://platform.openai.com/docs/guides/text-to-speech)                                 | `api_key`: OpenAI API key                                                                                                                                                                                                                                         |
+| [Azure TTS](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/text-to-speech) | `speech_key`: Azure Speech service key<br>`speech_region`: Azure Speech service region                                                                                                                                                                            |
+| [Google TTS](https://cloud.google.com/text-to-speech?hl=zh-CN)                                       | [Enable the Text-to-Speech API in the Google Cloud Console](https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=586547753837)<br>Set env var `GOOGLE_APPLICATION_CREDENTIALS` as the path to the service account key file |
+| [Volcengine TTS(火山引擎)](https://console.volcengine.com/sami)                                      | `access_key`: Volcengine access key ID. ([Get it here](https://console.volcengine.com/iam/keymanage/))<br>`secret_key`: Volcengine access secret key. ([Get it here](https://console.volcengine.com/iam/keymanage/))<br>`app_key`: Volcengine app key             |
+| [Baidu TTS](https://ai.baidu.com/tech/speech/tts)                                                    | `api_key`: Baidu API key<br>`secret_key`: Baidu secret key<br>Both can be acquired at the [console](https://console.bce.baidu.com/ai/#/ai/speech/app/list)                                                                                                        |
+| [Minimax TTS](https://www.minimaxi.com/document/speech-synthesis-engine?id=645e034eeb82db92fba9ac20) | `api_key`: Minimax API key<br>`group_id`: Minimax group ID<br>Both can be acquired at the [Minimax console](https://www.minimaxi.com/user-center/basic-information)                                                                                               |
 
 ## Installation
 
-Requires Python 3.8 or higher.
+Tetos requires Python 3.8 or higher.
 
 ```bash
 pip install tetos
@@ -98,7 +60,7 @@ speaker.say('Hello, world!', 'output.mp3')
 
 The initialization parameters may be different for other providers.
 
-## Behind a proxy
+## Work behind a proxy
 
 TeTos respects the proxy environment variables `HTTP_PROXY`, `HTTPS_PROXY`, `ALL_PROXY` and `NO_PROXY`.
 
