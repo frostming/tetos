@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import abc
+import hashlib
+import hmac
 from pathlib import Path
 from typing import Any, Callable, TypeVar
 
@@ -112,3 +114,7 @@ def common_options(cls: Speaker) -> Callable[[F], F]:
 
 def filter_none(d: dict[str, Any]) -> dict[str, Any]:
     return {k: v for k, v in d.items() if v is not None}
+
+
+def hmac_sha256(content: str, secret: bytes) -> bytes:
+    return hmac.new(secret, content.encode("utf8"), hashlib.sha256).digest()

@@ -10,6 +10,7 @@ from .google import GoogleSpeaker
 from .minimax import MinimaxSpeaker
 from .openai import OpenAISpeaker
 from .volc import VolcSpeaker
+from .xunfei import XunfeiSpeaker
 
 ALL_SPEAKERS: Sequence[type[Speaker]] = [
     AzureSpeaker,
@@ -19,6 +20,7 @@ ALL_SPEAKERS: Sequence[type[Speaker]] = [
     MinimaxSpeaker,
     OpenAISpeaker,
     VolcSpeaker,
+    XunfeiSpeaker,
 ]
 
 

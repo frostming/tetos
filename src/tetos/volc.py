@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import base64
 import hashlib
-import hmac
 import json
 import logging
 import time
@@ -16,7 +15,7 @@ from click.core import Command as Command
 from httpx import AsyncClient, Auth, Request
 from httpx._models import Response
 
-from .base import Speaker, SynthesizeError, common_options
+from .base import Speaker, SynthesizeError, common_options, hmac_sha256
 from .consts import VOLC_SUPPORTED_VOICES
 
 logger = logging.getLogger(__name__)
@@ -34,10 +33,6 @@ class VolcSignAuth(Auth):
         self.secret_key = secret_key
         self.service = service
         self.region = region
-
-    @staticmethod
-    def hmac_sha256(key: bytes, content: str) -> bytes:
-        return hmac.new(key, content.encode("utf-8"), hashlib.sha256).digest()
 
     def auth_flow(self, request: Request) -> Generator[Request, Response, None]:
         x_content_sha256 = hashlib.sha256(request.content).hexdigest()
@@ -70,8 +65,8 @@ class VolcSignAuth(Auth):
         )
         sign_key = self.secret_key.encode()
         for scope in credential_scope.split("/"):
-            sign_key = self.hmac_sha256(sign_key, scope)
-        signature = self.hmac_sha256(sign_key, string_to_sign).hex()
+            sign_key = hmac_sha256(scope, sign_key)
+        signature = hmac_sha256(string_to_sign, sign_key).hex()
         authorization = (
             f"{self.ALGORITHM} Credential={self.access_key}/{credential_scope}"
             f", SignedHeaders={signed_headers}, Signature={signature}"

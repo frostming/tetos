@@ -62,3 +62,17 @@ async def test_google_speaker(tmp_path: Path):
     duration = await speaker.synthesize("Hello, world!", tmp_path / "hello.mp3")
     assert 0.5 < duration < 4
     assert (tmp_path / "hello.mp3").stat().st_size > 0
+
+
+@pytest.mark.asyncio
+async def test_xunfei_speaker(tmp_path: Path):
+    from tetos.xunfei import XunfeiSpeaker
+
+    speaker = XunfeiSpeaker(
+        app_id=os.getenv("XF_APP_ID"),
+        api_key=os.getenv("XF_API_KEY"),
+        api_secret=os.getenv("XF_API_SECRET"),
+    )
+    duration = await speaker.synthesize("Hello, world!", tmp_path / "hello.mp3")
+    assert 0.5 < duration < 4
+    assert (tmp_path / "hello.mp3").stat().st_size > 0
