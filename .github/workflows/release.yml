@@ -33,21 +33,16 @@ jobs:
         run: |
           pip install dist/*.whl
 
-          tetos openai -o openai.mp3 "Hello world"
           tetos azure -o azure.mp3 "Hello world"
           tetos edge -o edge.mp3 "Hello world"
           tetos volc -o volc.mp3 "Hello world"
-          tetos google -o google.mp3 "Hello world"
           tetos baidu -o baidu.mp3 "Hello world"
         env:
-          OPENAI_API_BASE: ${{ secrets.OPENAI_API_BASE }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           AZURE_SPEECH_KEY: ${{ secrets.AZURE_SPEECH_KEY }}
           AZURE_SPEECH_REGION: ${{ secrets.AZURE_SPEECH_REGION }}
           VOLC_ACCESS_KEY: ${{ secrets.VOLC_ACCESS_KEY }}
           VOLC_SECRET_KEY: ${{ secrets.VOLC_SECRET_KEY }}
           VOLC_APP_KEY: ${{ secrets.VOLC_APP_KEY }}
-          GOOGLE_CREDENTIALS_JSON: ${{ secrets.GOOGLE_CREDENTIALS }}
           BAIDU_API_KEY: ${{ secrets.BAIDU_API_KEY }}
           BAIDU_SECRET_KEY: ${{ secrets.BAIDU_SECRET_KEY }}
 
