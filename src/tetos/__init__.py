@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Sequence
 
+from tetos.fish import FishSpeaker
+
 from .azure import AzureSpeaker
 from .baidu import BaiduSpeaker
 from .base import Speaker
@@ -21,6 +23,7 @@ ALL_SPEAKERS: Sequence[type[Speaker]] = [
     OpenAISpeaker,
     VolcSpeaker,
     XunfeiSpeaker,
+    FishSpeaker,
 ]
 
 

@@ -22,6 +22,7 @@ A unified interface for multiple Text-to-Speech (TTS) providers.
 | [Baidu TTS](https://ai.baidu.com/tech/speech/tts)                                                    | `api_key`: Baidu API key<br>`secret_key`: Baidu secret key<br>Both can be acquired at the [console](https://console.bce.baidu.com/ai/#/ai/speech/app/list)                                                                                                        |
 | [Minimax TTS](https://www.minimaxi.com/document/speech-synthesis-engine?id=645e034eeb82db92fba9ac20) | `api_key`: Minimax API key<br>`group_id`: Minimax group ID<br>Both can be acquired at the [Minimax console](https://www.minimaxi.com/user-center/basic-information)                                                                                               |
 | [迅飞 TTS](https://www.xfyun.cn/services/online_tts)                                                 | `app_id`: Xunfei APP ID<br>`api_key`: Xunfei API key<br>`api_secret`: Xunfei API secret                                                                                                                                                                           |
+| [Fish Audio](https://fish.audio)                                                                     | `api_key`: Fish Audio API key                                                                                                                                                                                                                                     |
 
 ## Installation
 

@@ -151,7 +151,7 @@ class BaiduSpeaker(Speaker):
             text: str,
             output: str,
         ):
-            speaker = BaiduSpeaker(api_key, secret_key, voice, speed, pitch, volume)
+            speaker = cls(api_key, secret_key, voice, speed, pitch, volume)
             speaker.say(text, output, lang=lang)
 
         return baidu
