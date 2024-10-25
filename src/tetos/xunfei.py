@@ -2,15 +2,11 @@ from __future__ import annotations
 
 import base64
 import datetime
-import json
 from dataclasses import dataclass
-from pathlib import Path
-from typing import cast
+from typing import AsyncGenerator
 from urllib.parse import urlencode
 
-import anyio
 import click
-import mutagen.mp3
 
 from .base import Speaker, SynthesizeError, common_options, hmac_sha256
 
@@ -64,12 +60,12 @@ class XunfeiSpeaker(Speaker):
         }
         return f"{base_url}?{urlencode(query)}"
 
-    async def synthesize(
-        self, text: str, out_file: str | Path, lang: str = "en-US"
-    ) -> float:
-        import websockets
+    async def stream(
+        self, text: str, lang: str = "en-US"
+    ) -> AsyncGenerator[bytes, None]:
+        from httpx_ws import aconnect_ws
 
-        async with websockets.connect(self._get_url()) as ws:
+        async with aconnect_ws(self._get_url()) as ws:
             request = {
                 "common": {"app_id": self.app_id},
                 "business": {
@@ -88,30 +84,26 @@ class XunfeiSpeaker(Speaker):
                 },
             }
 
-            await ws.send(json.dumps(request).encode())
+            await ws.send_json(request)
 
-            async with await anyio.Path(out_file).open("wb") as f:
-                while True:
-                    try:
-                        data = json.loads(await ws.recv())
-                    except Exception as e:
-                        raise SynthesizeError(
-                            f"Failed to parse response from xunfei: {e}"
-                        ) from e
-                    if data.get("code", 0) != 0:
-                        raise SynthesizeError(
-                            "Failed to synthesize speech: "
-                            f"{data.get('message', 'Unknown error')}"
-                        )
-                    if not data.get("data"):
-                        raise SynthesizeError("No data received from xunfei")
-                    chunk = base64.b64decode(data["data"]["audio"].encode())
-                    await f.write(chunk)
-                    if data["data"]["status"] == 2:
-                        break
-
-        audio = mutagen.mp3.MP3(out_file)
-        return cast(float, audio.info.length)
+            while True:
+                try:
+                    data = await ws.receive_json()
+                except Exception as e:
+                    raise SynthesizeError(
+                        f"Failed to parse response from xunfei: {e}"
+                    ) from e
+                if data.get("code", 0) != 0:
+                    raise SynthesizeError(
+                        "Failed to synthesize speech: "
+                        f"{data.get('message', 'Unknown error')}"
+                    )
+                if not data.get("data"):
+                    raise SynthesizeError("No data received from xunfei")
+                chunk = base64.b64decode(data["data"]["audio"].encode())
+                yield chunk
+                if data["data"]["status"] == 2:
+                    break
 
     @classmethod
     def list_voices(cls) -> list[str]:

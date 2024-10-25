@@ -1,12 +1,11 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from pathlib import Path
+from typing import AsyncGenerator
 
-import anyio
 import click
 
-from .base import Speaker, SynthesizeError, common_options
+from .base import Duration, Speaker, SynthesizeError, common_options
 from .consts import EDGE_SUPPORTED_VOICES
 
 
@@ -26,9 +25,9 @@ class EdgeSpeaker(Speaker):
     pitch: str = "+0Hz"
     volume: str = "+0%"
 
-    async def synthesize(
-        self, text: str, out_file: str | Path, lang: str = "en-US"
-    ) -> float:
+    async def stream(
+        self, text: str, lang: str = "en-US"
+    ) -> AsyncGenerator[bytes, None]:
         import edge_tts
 
         communicate = edge_tts.Communicate(
@@ -39,16 +38,14 @@ class EdgeSpeaker(Speaker):
             volume=self.volume,
         )
         duration = 0
-        file = anyio.Path(out_file)
-        async with await file.open("wb") as f:
-            async for chunk in communicate.stream():
-                if chunk["type"] == "audio":
-                    await f.write(chunk["data"])
-                elif chunk["type"] == "WordBoundary":
-                    duration = (chunk["offset"] + chunk["duration"]) / 1e7
-            if duration == 0:
-                raise SynthesizeError("Failed to get tts from edge")
-        return duration
+        async for chunk in communicate.stream():
+            if chunk["type"] == "audio":
+                yield chunk["data"]
+            elif chunk["type"] == "WordBoundary":
+                duration = (chunk["offset"] + chunk["duration"]) / 1e7
+        if duration == 0:
+            raise SynthesizeError("Failed to get tts from edge")
+        raise Duration(duration)
 
     def get_voice(self, lang: str) -> str:
         if self.voice:

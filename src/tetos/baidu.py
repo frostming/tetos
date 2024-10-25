@@ -6,13 +6,11 @@ import platform
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, ClassVar, cast
+from typing import Any, AsyncGenerator, ClassVar
 from urllib.parse import quote_plus
 
-import anyio
 import click
 import httpx
-import mutagen.mp3
 
 from .base import Speaker, SynthesizeError, common_options
 from .consts import BAIDU_SUPPORTED_VOICES
@@ -83,9 +81,9 @@ class BaiduSpeaker(Speaker):
                 json.dump(token, f)
             return token
 
-    async def synthesize(
-        self, text: str, out_file: str | Path, lang: str = "en-US"
-    ) -> float:
+    async def stream(
+        self, text: str, lang: str = "en-US"
+    ) -> AsyncGenerator[bytes, None]:
         params = {
             "tok": await self._ensure_token(),
             "tex": quote_plus(text),  # one more encode here
@@ -104,13 +102,8 @@ class BaiduSpeaker(Speaker):
                     await resp.aread()
                     logger.error("Failed to get tts: %s", resp.text)
                     raise SynthesizeError("Failed to get tts")
-                file = anyio.Path(out_file)
-                async with await file.open("wb") as f:
-                    async for chunk in resp.aiter_bytes(8192):
-                        await f.write(chunk)
-
-        audio = mutagen.mp3.MP3(out_file)
-        return cast(float, audio.info.length)
+                async for chunk in resp.aiter_bytes(8192):
+                    yield chunk
 
     @classmethod
     def list_voices(cls) -> list[str]:

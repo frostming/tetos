@@ -4,12 +4,9 @@ from __future__ import annotations
 
 import json
 import os
-from pathlib import Path
-from typing import cast
+from typing import AsyncGenerator
 
-import anyio
 import click
-import mutagen.mp3
 from google.cloud import texttospeech
 
 from .base import Speaker, common_options
@@ -72,9 +69,9 @@ class GoogleSpeaker(Speaker):
                 "en-US-Studio-M",
             )
 
-    async def synthesize(
-        self, text: str, out_file: str | Path, lang: str = "en-US"
-    ) -> float:
+    async def stream(
+        self, text: str, lang: str = "en-US"
+    ) -> AsyncGenerator[bytes, None]:
         input_text = texttospeech.SynthesisInput(text=text)
         voice = texttospeech.VoiceSelectionParams(
             name=(voice := self.get_voice(lang)),
@@ -98,12 +95,7 @@ class GoogleSpeaker(Speaker):
                     "audio_config": self.audio_config,
                 }
             )
-        file = anyio.Path(out_file)
-        async with await file.open("wb") as f:
-            await f.write(resp.audio_content)
-
-        audio = mutagen.mp3.MP3(out_file)
-        return cast(float, audio.info.length)
+            yield resp.audio_content
 
     @classmethod
     def list_voices(cls) -> list[str]:

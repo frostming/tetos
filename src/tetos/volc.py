@@ -7,15 +7,14 @@ import logging
 import time
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Generator, cast
+from typing import Any, AsyncGenerator, Generator
 
-import anyio
 import click
 from click.core import Command as Command
 from httpx import AsyncClient, Auth, Request
 from httpx._models import Response
 
-from .base import Speaker, SynthesizeError, common_options, hmac_sha256
+from .base import Duration, Speaker, SynthesizeError, common_options, hmac_sha256
 from .consts import VOLC_SUPPORTED_VOICES
 
 logger = logging.getLogger(__name__)
@@ -161,9 +160,9 @@ class VolcSpeaker(Speaker):
             json.dump(token, f)
         return token
 
-    async def synthesize(
-        self, text: str, out_file: str | Path, lang: str = "en-US"
-    ) -> float:
+    async def stream(
+        self, text: str, lang: str = "en-US"
+    ) -> AsyncGenerator[bytes, None]:
         tts_payload = json.dumps(
             {
                 "text": text,
@@ -188,11 +187,9 @@ class VolcSpeaker(Speaker):
             raise self._get_error(resp)
         data = resp.json()
         if data["status_code"] == 20000000 and len(data["data"]) > 0:
-            file = anyio.Path(out_file)
-            async with await file.open("wb") as f:
-                await f.write(base64.b64decode(data["data"]))
+            yield base64.b64decode(data["data"])
             payload = json.loads(data["payload"])
-            return cast(float, payload["duration"])
+            raise Duration(payload["duration"])
         raise SynthesizeError("Failed to get tts from volcengine")
 
     def _get_error(self, resp: Response) -> SynthesizeError:

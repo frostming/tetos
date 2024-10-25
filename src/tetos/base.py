@@ -4,9 +4,19 @@ import abc
 import hashlib
 import hmac
 from pathlib import Path
-from typing import Any, Callable, TypeVar
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    AsyncGenerator,
+    AsyncIterable,
+    Callable,
+    TypeVar,
+    cast,
+)
 
+import anyio
 import click
+import mutagen.mp3
 
 F = TypeVar("F", bound=Callable[..., Any])
 
@@ -15,8 +25,13 @@ class SynthesizeError(RuntimeError):
     pass
 
 
+class Duration(Exception):
+    def __init__(self, duration: float):
+        self.duration = duration
+        super().__init__(f"Duration: {duration}")
+
+
 class Speaker(metaclass=abc.ABCMeta):
-    @abc.abstractmethod
     async def synthesize(
         self, text: str, out_file: str | Path, lang: str = "en-US"
     ) -> float:
@@ -30,7 +45,39 @@ class Speaker(metaclass=abc.ABCMeta):
         Returns:
             float: The duration of the speech in seconds.
         """
+        async with await anyio.open_file(out_file, "wb") as f:
+            try:
+                async for chunk in self.stream(text, lang):
+                    await f.write(chunk)
+            except Duration as e:
+                return e.duration
+
+        audio = mutagen.mp3.MP3(out_file)
+        return cast(float, audio.info.length)
+
+    @abc.abstractmethod
+    async def stream(
+        self, text: str, lang: str = "en-US"
+    ) -> AsyncGenerator[bytes, None]:
+        """Generate speech from text as a stream.
+
+        Args:
+            text (str): The text to synthesize.
+            lang (str): The language code of the text. e.g. "en-US", "fr-FR".
+
+        Raise:
+            Duration: If the speech is generated successfully, it contains the duration.
+            SynthesizeError: If the speech is not generated successfully.
+        """
         raise NotImplementedError
+
+    if TYPE_CHECKING:
+
+        async def live(
+            self, text_stream: AsyncIterable[str], lang: str = "en-US"
+        ) -> AsyncGenerator[bytes, None]:
+            """Generate speech from text as a stream in realtime."""
+            raise NotImplementedError
 
     @classmethod
     @abc.abstractmethod

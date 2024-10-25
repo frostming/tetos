@@ -1,10 +1,8 @@
 from __future__ import annotations
 
-from pathlib import Path
-from typing import cast
+from typing import AsyncGenerator
 
 import click
-import mutagen.mp3
 
 from .base import Speaker, common_options
 
@@ -36,9 +34,9 @@ class OpenAISpeaker(Speaker):
         self.model = model
         self.client = openai.AsyncOpenAI(api_key=api_key, base_url=api_base)
 
-    async def synthesize(
-        self, text: str, out_file: str | Path, lang: str = "en-US"
-    ) -> float:
+    async def stream(
+        self, text: str, lang: str = "en-US"
+    ) -> AsyncGenerator[bytes, None]:
         extra_args = {"speed": self.speed} if self.speed is not None else {}
         async with self.client.with_streaming_response.audio.speech.create(
             model=self.model,
@@ -46,10 +44,8 @@ class OpenAISpeaker(Speaker):
             voice=self.voice,
             **extra_args,
         ) as resp:
-            await resp.stream_to_file(out_file, chunk_size=8192)
-
-        audio = mutagen.mp3.MP3(out_file)
-        return cast(float, audio.info.length)
+            async for chunk in resp.iter_bytes():
+                yield chunk
 
     @classmethod
     def list_voices(cls) -> list[str]:

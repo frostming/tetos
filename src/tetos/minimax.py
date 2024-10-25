@@ -2,12 +2,9 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
-from pathlib import Path
-from typing import TypedDict, cast
+from typing import AsyncGenerator, TypedDict
 
-import anyio
 import click
-import mutagen.mp3
 
 from .base import Speaker, SynthesizeError, common_options, filter_none
 from .consts import MINIMAX_SUPPORTED_VOICES
@@ -46,9 +43,9 @@ class MinimaxSpeaker(Speaker):
     vol: float | int | None = None
     pitch: int | None = None
 
-    async def synthesize(
-        self, text: str, out_file: str | Path, lang: str = "en-US"
-    ) -> float:
+    async def stream(
+        self, text: str, lang: str = "en-US"
+    ) -> AsyncGenerator[bytes, None]:
         import httpx
 
         data = filter_none(
@@ -81,13 +78,9 @@ class MinimaxSpeaker(Speaker):
                         "Failed to get tts: "
                         f"{err.get('base_resp', {}).get('status_msg', '')}"
                     )
-                file = anyio.Path(out_file)
-                async with await file.open("wb") as f:
-                    async for chunk in resp.aiter_bytes(8192):
-                        await f.write(chunk)
 
-        audio = mutagen.mp3.MP3(out_file)
-        return cast(float, audio.info.length)
+                async for chunk in resp.aiter_bytes():
+                    yield chunk
 
     @classmethod
     def list_voices(cls) -> list[str]:
