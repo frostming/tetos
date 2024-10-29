@@ -90,12 +90,14 @@ class FishSpeaker(Speaker):
                     try:
                         message = await ws.receive_bytes()
                         data = ormsgpack.unpackb(message)
-                        match data["event"]:
-                            case "audio":
-                                yield data["audio"]
-                            case "finish" if data["reason"] == "error":
+                        event = data["event"]
+                        if event == "audio":
+                            yield data["audio"]
+                        elif event == "finish":
+                            reason = data["reason"]
+                            if reason == "error":
                                 raise SynthesizeError("websocket finish with error")
-                            case "finish" if data["reason"] == "stop":
+                            elif reason == "stop":
                                 break
                     except WebSocketDisconnect:
                         raise SynthesizeError("websocket disconnect") from None
