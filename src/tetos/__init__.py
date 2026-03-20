@@ -7,6 +7,7 @@ from tetos.fish import FishSpeaker
 from .azure import AzureSpeaker
 from .baidu import BaiduSpeaker
 from .base import Speaker
+from .camb import CambSpeaker
 from .edge import EdgeSpeaker
 from .google import GoogleSpeaker
 from .minimax import MinimaxSpeaker
@@ -17,6 +18,7 @@ from .xunfei import XunfeiSpeaker
 ALL_SPEAKERS: Sequence[type[Speaker]] = [
     AzureSpeaker,
     BaiduSpeaker,
+    CambSpeaker,
     EdgeSpeaker,
     GoogleSpeaker,
     MinimaxSpeaker,

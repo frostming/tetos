@@ -65,6 +65,16 @@ async def test_google_speaker(tmp_path: Path):
 
 
 @pytest.mark.asyncio
+async def test_camb_speaker(tmp_path: Path):
+    from tetos.camb import CambSpeaker
+
+    speaker = CambSpeaker(api_key=os.getenv("CAMB_API_KEY"))
+    duration = await speaker.synthesize("Hello, world!", tmp_path / "hello.mp3")
+    assert 0.5 < duration < 4
+    assert (tmp_path / "hello.mp3").stat().st_size > 0
+
+
+@pytest.mark.asyncio
 async def test_xunfei_speaker(tmp_path: Path):
     from tetos.xunfei import XunfeiSpeaker
 
