@@ -376,17 +376,19 @@ files = [
 
 [[package]]
 name = "edge-tts"
-version = "6.1.10"
+version = "7.2.8"
 requires_python = ">=3.7"
 summary = "Microsoft Edge's TTS"
 groups = ["default"]
 dependencies = [
-    "aiohttp>=3.8.0",
+    "aiohttp<4.0.0,>=3.8.0",
     "certifi>=2023.11.17",
+    "tabulate<1.0.0,>=0.4.4",
+    "typing-extensions<5.0.0,>=4.1.0",
 ]
 files = [
-    {file = "edge-tts-6.1.10.tar.gz", hash = "sha256:70a49f32ed766ea405b8d2a44ef124805349d296c1a56a220b0aff1e202f8891"},
-    {file = "edge_tts-6.1.10-py3-none-any.whl", hash = "sha256:e7a4bceea8f797498b9be1216a1448a0ce1c2ba832991a16ced4e5e7399e3e0a"},
+    {file = "edge_tts-7.2.8-py3-none-any.whl", hash = "sha256:361fe48ce7ef613adbe30f664e3765dd71029c6cb57427279eff8ad6df2eb211"},
+    {file = "edge_tts-7.2.8.tar.gz", hash = "sha256:fcf185a0d527a0d2d003f9d5841facc1d5e0e7b3b88d5df9c32990402c6b8cd0"},
 ]
 
 [[package]]
@@ -1491,6 +1493,17 @@ groups = ["doc"]
 files = [
     {file = "sphinxcontrib-serializinghtml-1.1.5.tar.gz", hash = "sha256:aa5f6de5dfdf809ef505c4895e51ef5c9eac17d0f287933eb49ec495280b6952"},
     {file = "sphinxcontrib_serializinghtml-1.1.5-py2.py3-none-any.whl", hash = "sha256:352a9a00ae864471d3a7ead8d7d79f5fc0b57e8b3f95e9867eb9eb28999b92fd"},
+]
+
+[[package]]
+name = "tabulate"
+version = "0.9.0"
+requires_python = ">=3.7"
+summary = "Pretty-print tabular data"
+groups = ["default"]
+files = [
+    {file = "tabulate-0.9.0-py3-none-any.whl", hash = "sha256:024ca478df22e9340661486f85298cff5f6dcdba14f3813e8830015b9ed1948f"},
+    {file = "tabulate-0.9.0.tar.gz", hash = "sha256:0095b12bf5966de529c0feb1fa08671671b3368eec77d7ef7ab114be2c068b3c"},
 ]
 
 [[package]]
