@@ -50,6 +50,7 @@ class FishSpeaker(Speaker):
             headers={
                 "Authorization": f"Bearer {self.api_key}",
                 "developer-id": self.developer_id,
+                "model": "s2-pro",
             },
         ) as client:
             async with client.stream(

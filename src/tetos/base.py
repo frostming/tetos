@@ -69,7 +69,9 @@ class Speaker(metaclass=abc.ABCMeta):
             Duration: If the speech is generated successfully, it contains the duration.
             SynthesizeError: If the speech is not generated successfully.
         """
-        raise NotImplementedError
+        if True:
+            raise NotImplementedError
+        yield b""
 
     if TYPE_CHECKING:
 
@@ -77,7 +79,9 @@ class Speaker(metaclass=abc.ABCMeta):
             self, text_stream: AsyncIterable[str], lang: str = "en-US"
         ) -> AsyncGenerator[bytes, None]:
             """Generate speech from text as a stream in realtime."""
-            raise NotImplementedError
+            if True:
+                raise NotImplementedError
+            yield b""
 
     @classmethod
     @abc.abstractmethod
@@ -120,7 +124,7 @@ class Speaker(metaclass=abc.ABCMeta):
         return result
 
 
-def common_options(cls: Speaker) -> Callable[[F], F]:
+def common_options(cls: type[Speaker]) -> Callable[[F], F]:
     def list_voices(ctx, param, value):
         if not value or ctx.resilient_parsing:
             return
